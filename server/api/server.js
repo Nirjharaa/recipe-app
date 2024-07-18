@@ -9,14 +9,21 @@ const app = express();
 const PORT = process.env.PORT || 5001;
 
 // Connect to MongoDB Atlas
-mongoose.connect('mongodb+srv://nirjharaapatel:jrW8qHc3cENUO5Ji@cluster0.8l1jnq6.mongodb.net/recipe-app-db?retryWrites=true&w=majority&appName=Cluster0', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_DB_URI, {
+      // Removed deprecated options
+    });
+    console.log('Connected to MongoDB Atlas');
+  } catch (error) {
+    console.error('MongoDB connection error:', error);
+  }
+};
+
+connectDB();
+
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-db.once('open', () => console.log('Connected to MongoDB Atlas'));
-
 // Define Recipe Schema
 const recipeSchema = new mongoose.Schema({
   name: String,
